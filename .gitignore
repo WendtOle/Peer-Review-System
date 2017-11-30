@@ -1,4 +1,5 @@
 #Python 
 venv/
+PRSEnvironment/
 *.py[cod]
 __pycache__/
