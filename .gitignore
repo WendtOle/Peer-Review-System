@@ -6,3 +6,6 @@ __pycache__/
 
 #pycharm
 .idea/
+
+#sqlite
+*.db
