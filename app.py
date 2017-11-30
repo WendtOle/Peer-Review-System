@@ -12,7 +12,7 @@ class User(db.Model):
 
 @app.route('/')
 def index():
-        return render_template('index.html')
+        return render_template('index.html',users = User.query.all())
 
 if __name__ == '__main__':
     app.run(debug=True)
