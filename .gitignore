@@ -3,3 +3,6 @@ venv/
 PRSEnvironment/
 *.py[cod]
 __pycache__/
+
+#pycharm
+.idea/
