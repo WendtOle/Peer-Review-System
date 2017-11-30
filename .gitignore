@@ -1,1 +1,4 @@
+#Python 
 venv/
+*.py[cod]
+__pycache__/
