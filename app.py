@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -16,6 +16,13 @@ class User(db.Model):
 def index():
     return render_template('index.html', users=User.query.all())
 
+@app.route('/register', methods=['POST'])
+def nothing():
+    email = request.form['email']
+    password = request.form['password']
+    db.session.add(User(email=email,password=password,isConferenceChair=False))
+    db.session.commit()
+    return redirect("/", code=302)
 
 if __name__ == '__main__':
     db.drop_all()
