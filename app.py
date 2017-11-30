@@ -18,7 +18,7 @@ def index():
 def nothing():
     email = request.form['email']
     password = request.form['password']
-    db.session.add(User(email=email, password=password, isConferenceChair=False))
+    db.session.add(models.User(email=email, password=password, isConferenceChair=False))
     db.session.commit()
     return redirect("/", code=302)
 
