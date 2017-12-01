@@ -13,6 +13,9 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html', users=models.User.query.all())
 
+@app.route('/papers')
+def papers():
+    return render_template('papers.html', papers=models.Paper.query.all())
 
 @app.route('/register', methods=['POST'])
 def nothing():
@@ -21,6 +24,14 @@ def nothing():
     db.session.add(models.User(email=email, password=password, isConferenceChair=False))
     db.session.commit()
     return redirect("/", code=302)
+
+@app.route('/submitpaper', methods=['POST'])
+def submitPaper():
+    title = request.form['title']
+    abstract = request.form['abstract']
+    db.session.add(models.Paper(title=title, abstract=abstract))
+    db.session.commit()
+    return redirect("/papers", code=302)
 
 
 if __name__ == '__main__':
