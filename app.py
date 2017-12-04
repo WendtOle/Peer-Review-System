@@ -8,7 +8,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///PeerReviewSystem.db'
 
 db = SQLAlchemy(app)
 
-
 @app.route('/')
 def index():
     return render_template('index.html', users=models.User.query.all())

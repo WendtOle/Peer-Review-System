@@ -1,12 +1,12 @@
 from app import db
 
 
-user_paper_relation_table = db.Table('association', db.Model.metadata,
+user_paper_relation_table = db.Table('user_paper', db.Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('paper_id', db.Integer, db.ForeignKey('papers.id'))
 )
 
-user_paper_review_relation_table = db.Table('association', db.Model.metadata,
+user_paper_review_relation_table = db.Table('user_paper_review', db.Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('paper_id', db.Integer, db.ForeignKey('papers.id'))
 )
