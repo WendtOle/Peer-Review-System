@@ -46,7 +46,6 @@ def submitPaper(author_id):
 
     session.add(paper)
     session.commit()
-    print(models.Paper.query.all())
     return redirect("/user/" + author_id, code=302)
 
 @app.route('/addAuthorToPaper/<paper_id>', methods=['POST'])
@@ -56,11 +55,6 @@ def addAuthorToPaper(paper_id):
 
     userToAdd = session.query(models.User).filter(models.User.email == email).first()
     paper = session.query(models.Paper).get(paper_id)
-    print(paper_id)
-    print("paper:")
-    print(paper)
-    print("newAuthor:")
-    print(userToAdd)
     paper.authors.append(userToAdd)
     session.commit()
 
