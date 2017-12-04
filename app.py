@@ -13,6 +13,10 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html', users=models.User.query.all())
 
+@app.route('/user/<user_id>')
+def showUser(user_id):
+    return render_template('userShowPage.html', user=models.User.query.get(user_id))
+
 @app.route('/papers')
 def papers():
     return render_template('papers.html', papers=models.Paper.query.all())
