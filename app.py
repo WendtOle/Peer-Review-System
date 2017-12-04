@@ -26,7 +26,6 @@ def showPaper(paper_id):
     currentPaper = session.query(models.Paper).get(paper_id)
     return render_template('paperShowPage.html', paper=currentPaper)
 
-
 @app.route('/register', methods=['POST'])
 def nothing():
     email = request.form['email']
@@ -45,11 +44,27 @@ def submitPaper(author_id):
     author = session.query(models.User).get(author_id)
     paper.authors.append(author)
 
-
     session.add(paper)
     session.commit()
     print(models.Paper.query.all())
     return redirect("/user/" + author_id, code=302)
+
+@app.route('/addAuthorToPaper/<paper_id>', methods=['POST'])
+def addAuthorToPaper(paper_id):
+    email = request.form['email']
+    session = db.session()
+
+    userToAdd = session.query(models.User).filter(models.User.email == email).first()
+    paper = session.query(models.Paper).get(paper_id)
+    print(paper_id)
+    print("paper:")
+    print(paper)
+    print("newAuthor:")
+    print(userToAdd)
+    paper.authors.append(userToAdd)
+    session.commit()
+
+    return redirect("/paper/" + paper_id, code=302)
 
 if __name__ == '__main__':
     dbSeed.init()
