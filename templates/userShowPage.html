@@ -5,13 +5,38 @@
     <title>Home</title>
 </head>
 <body>
-    <br>
+
+    <h1>User Page</h1>
+
     <tbody>
         <tr>
             <td>{{ user.id }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.password }}</td>
         </tr>
+    </tbody>
+    <br>
+
+    Paper Submition:
+    <br>
+    <form action="/submitpaper/{{ user.id }}" method="post">
+        <input type="text" name="title">
+        <input type="text" name="abstract">
+        <input type="submit" value="Submit!"/>
+    </form>
+
+    Papers:
+    <br>
+    <tbody>
+        {% for paper in papers %}
+            <tr>
+                <td>{{ paper.id }}</td>
+                <td>{{ paper.title }}</td>
+                <td>{{ paper.abstract }}</td>
+                <td>{{ paper.authors }}</td>
+            </tr>
+            <br>
+        {% endfor %}
     </tbody>
 </body>
 </html>

@@ -15,15 +15,11 @@ def index():
 
 @app.route('/user/<user_id>')
 def showUser(user_id):
-    return render_template('userShowPage.html', user=models.User.query.get(user_id))
-
-@app.route('/papers')
-def papers():
-    return render_template('papers.html', papers=models.Paper.query.all())
-
-@app.route('/papers/<paper_id>')
-def papersShowOne(paper_id):
-    return render_template('paperShowPage.html', paper=models.Paper.query.get(paper_id))
+    session = db.session()
+    print(user_id)
+    papersOfUser = session.query(models.Paper).filter(models.Paper.authors.any(id = user_id))
+    currentUser = session.query(models.User).get(user_id)
+    return render_template('userShowPage.html', user=currentUser, papers=papersOfUser)
 
 @app.route('/register', methods=['POST'])
 def nothing():
@@ -33,16 +29,22 @@ def nothing():
     db.session.commit()
     return redirect("/", code=302)
 
-@app.route('/submitpaper', methods=['POST'])
-def submitPaper():
+@app.route('/submitpaper/<author_id>', methods=['POST'])
+def submitPaper(author_id):
     title = request.form['title']
     abstract = request.form['abstract']
-    db.session.add(models.Paper(title=title, abstract=abstract))
-    db.session.commit()
-    return redirect("/papers", code=302)
+    paper = models.Paper(title=title, abstract=abstract)
 
+    session = db.session()
+    author = session.query(models.User).get(author_id)
+    paper.authors.append(author)
+
+
+    session.add(paper)
+    session.commit()
+    print(models.Paper.query.all())
+    return redirect("/user/" + author_id, code=302)
 
 if __name__ == '__main__':
     dbSeed.init()
-
     app.run(debug=True)
