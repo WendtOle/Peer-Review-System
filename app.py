@@ -17,6 +17,10 @@ def index():
 def papers():
     return render_template('papers.html', papers=models.Paper.query.all())
 
+@app.route('/papers/<paper_id>')
+def papersShowOne(paper_id):
+    return render_template('paperShowPage.html', paper=models.Paper.query.get(paper_id))
+
 @app.route('/register', methods=['POST'])
 def nothing():
     email = request.form['email']
