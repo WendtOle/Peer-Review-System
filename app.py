@@ -59,6 +59,26 @@ def addAuthorToPaper(paper_id):
 
     return redirect("/paper/" + paper_id, code=302)
 
+def len(list):
+    counter = 0
+    for item in list:
+        counter += 1
+    return counter
+
+@app.route('/addReviewerToPaper/<paper_id>', methods=['POST'])
+def addReviewerToPaper(paper_id):
+    email = request.form['email']
+    session = db.session()
+
+    reviewerToAdd = session.query(models.User).filter(models.User.email == email).first()
+    paper = session.query(models.Paper).get(paper_id)
+    authors = paper.authors
+    if not reviewerToAdd in authors and len(paper.reviewersOfTable) < 3:
+        paper.reviewersOfTable.append(reviewerToAdd)
+    session.commit()
+
+    return redirect("/paper/" + paper_id, code=302)
+
 if __name__ == '__main__':
     dbSeed.init()
     app.run(debug=True)

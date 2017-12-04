@@ -32,5 +32,29 @@
         <input type="text" name="email">
         <input type="submit" value="Submit!"/>
     </form>
+
+    <br/>
+    Reviewers:
+
+    <br>
+    <tbody>
+        {% for reviewer in paper.reviewersOfTable %}
+            <tr>
+                user_id:
+                <td>{{ reviewer.id }}</td>
+                email:
+                <td>{{ reviewer.email }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </tbody>
+
+    <br/>
+    Want to add an Reviewer for this Paper:
+    <form action="/addReviewerToPaper/{{ paper.id }}" method="post">
+        email:
+        <input type="text" name="email">
+        <input type="submit" value="Submit!"/>
+    </form>
 </body>
 </html>

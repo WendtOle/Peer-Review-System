@@ -1,6 +1,5 @@
 from app import db
 
-
 user_paper_relation_table = db.Table('user_paper', db.Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('paper_id', db.Integer, db.ForeignKey('papers.id'))
