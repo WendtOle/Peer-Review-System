@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+
+    <h1>Paper Page</h1>
+
+    <tbody>
+        <tr>
+            <td>{{ paper.title }}</td>
+            <td>{{ paper.body }}</td>
+        </tr>
+    </tbody>
+    <br>
+
+    Authors:
+
+    <br>
+    <tbody>
+        {% for user in paper.authors %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.password }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </tbody>
+</body>
+</html>

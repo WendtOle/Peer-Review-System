@@ -16,10 +16,16 @@ def index():
 @app.route('/user/<user_id>')
 def showUser(user_id):
     session = db.session()
-    print(user_id)
     papersOfUser = session.query(models.Paper).filter(models.Paper.authors.any(id = user_id))
     currentUser = session.query(models.User).get(user_id)
     return render_template('userShowPage.html', user=currentUser, papers=papersOfUser)
+
+@app.route('/paper/<paper_id>')
+def showPaper(paper_id):
+    session = db.session()
+    currentPaper = session.query(models.Paper).get(paper_id)
+    return render_template('paperShowPage.html', paper=currentPaper)
+
 
 @app.route('/register', methods=['POST'])
 def nothing():
