@@ -6,16 +6,11 @@
 </head>
 <body>
 
-    <h1>User Page</h1>
+    <h1>User: {{ user.email }}</h1>
 
-    <tbody>
-        <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.password }}</td>
-        </tr>
-    </tbody>
-    <br>
+    user_id: {{ user.id }}
+    password: {{ user.password }}
+    <br/>
 
     Paper Submition:
     <br>
@@ -30,10 +25,20 @@
     <tbody>
         {% for paper in papers %}
             <tr>
+
+                <b><td>{{ paper.title }}</td></b>
+                <br>
+                paper_id:
                 <td>{{ paper.id }}</td>
-                <td>{{ paper.title }}</td>
-                <td>{{ paper.abstract }}</td>
-                <td>{{ paper.authors }}</td>
+                <br>
+                authors:
+                {% for user in paper.authors %}
+                    <tr>
+                    user_id:
+                    <td>{{ user.id }}</td>
+                    email:
+                    <td>{{ user.email }}</td>
+                {% endfor %}
             </tr>
             <br>
         {% endfor %}

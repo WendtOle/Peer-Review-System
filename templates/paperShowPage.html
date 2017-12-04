@@ -6,15 +6,9 @@
 </head>
 <body>
 
-    <h1>Paper Page</h1>
+    <h1>Paper: {{ paper.title }}</h1>
 
-    <tbody>
-        <tr>
-            <td>{{ paper.title }}</td>
-            <td>{{ paper.body }}</td>
-        </tr>
-    </tbody>
-    <br>
+    {{ paper.body }}
 
     Authors:
 
@@ -22,14 +16,16 @@
     <tbody>
         {% for user in paper.authors %}
             <tr>
+                user_id:
                 <td>{{ user.id }}</td>
+                email:
                 <td>{{ user.email }}</td>
-                <td>{{ user.password }}</td>
             </tr>
             <br>
         {% endfor %}
     </tbody>
 
+    <br/>
     Want to add an Author to a Paper:
     <form action="/addAuthorToPaper/{{ paper.id }}" method="post">
         email:
