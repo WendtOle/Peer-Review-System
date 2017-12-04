@@ -45,7 +45,8 @@ def showUser(user_id):
     session = db.session()
     papersOfUser = session.query(models.Paper).filter(models.Paper.authors.any(id=user_id))
     currentUser = session.query(models.User).get(user_id)
-    return render_template('userShowPage.html', user=currentUser, papers=papersOfUser)
+    papersToReview = session.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id = user_id))
+    return render_template('userShowPage.html', user=currentUser, papers=papersOfUser, papersToReview = papersToReview)
 
 
 @app.route('/paper/<paper_id>')

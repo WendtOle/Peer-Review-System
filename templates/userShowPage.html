@@ -15,12 +15,13 @@
         <input type="submit" value="Submit!"/>
     </form>
 
+    <br/>
     Papers:
     <br>
     <tbody>
         {% for paper in papers %}
             <tr>
-
+                <br/>
                 <b><td>{{ paper.title }}</td></b>
                 <br>
                 paper_id:
@@ -39,4 +40,20 @@
         {% endfor %}
     </tbody>
 
+    <br/>
+    Papers to Review:
+    <br/>
+    <tbody>
+        {% for paper in papersToReview %}
+            <br/>
+            <tr>
+                <b><td>{{ paper.title }}</td></b>
+                <br>
+                paper_id:
+                <td>{{ paper.id }}</td>
+                <br>
+            </tr>
+            <br>
+        {% endfor %}
+    </tbody>
 {% endblock %}
