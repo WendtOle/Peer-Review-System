@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body>
+    Register a new User:
+    <form action="/register" method="post">
+        <input type="text" name="email">
+        <input type="text" name="password">
+        <input type="submit" value="Submit!"/>
+    </form>
+
+    <br>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.password }}</td>
+                <td>{{ user.isConferenceChair }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </tbody>
+</body>
+</html>

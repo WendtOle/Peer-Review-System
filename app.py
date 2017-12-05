@@ -1,16 +1,40 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 import models
 import dbSeed
 
 app = Flask(__name__)
+app.secret_key = 'thishastobemoresecret'
+bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///PeerReviewSystem.db'
-
 db = SQLAlchemy(app)
 
 @app.route('/')
 def index():
-    return render_template('index.html', users=models.User.query.all())
+    if 'user' in session:
+        return render_template('index.html', user=session['user'])
+    else:
+        return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    email = request.form['email']
+    password = request.form['password']
+
+    currentUser = db.session().query(models.User).filter_by(email=email).first()
+
+    if bcrypt.check_password_hash(currentUser.password, password):
+        session['user'] = currentUser.email
+        session['isConferenceChair'] = currentUser.isConferenceChair
+    return redirect("/")
+
+@app.route('/logout')
+def logout():
+    session.pop('user')
+    session.pop('isConferenceChair')
+    return redirect('/')
+
 
 @app.route('/user/<user_id>')
 def showUser(user_id):
@@ -25,11 +49,19 @@ def showPaper(paper_id):
     currentPaper = session.query(models.Paper).get(paper_id)
     return render_template('paperShowPage.html', paper=currentPaper)
 
+@app.route('/register')
+def showRegisterPage():
+    return render_template('register.html', users=models.User.query.all())
+
+
+# TODO: check if email already exists
+# TODO: check if email or password are empty
 @app.route('/register', methods=['POST'])
 def nothing():
     email = request.form['email']
     password = request.form['password']
-    db.session.add(models.User(email=email, password=password, isConferenceChair=False))
+    password_hashed = bcrypt.generate_password_hash(password).decode('utf-8')
+    db.session.add(models.User(email=email, password=password_hashed, isConferenceChair=False))
     db.session.commit()
     return redirect("/", code=302)
 
