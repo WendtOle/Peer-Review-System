@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import models
 import dbSeed
+import os
 
 app = Flask(__name__)
-app.secret_key = 'thishastobemoresecret'
+app.secret_key = os.urandom(24)
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///PeerReviewSystem.db'
 db = SQLAlchemy(app)
