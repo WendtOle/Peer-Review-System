@@ -11,12 +11,14 @@ bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///PeerReviewSystem.db'
 db = SQLAlchemy(app)
 
+
 @app.route('/')
 def index():
     if 'user' in session:
         return render_template('index.html', user=session['user'])
     else:
         return render_template('login.html')
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -30,6 +32,7 @@ def login():
         session['isConferenceChair'] = currentUser.isConferenceChair
     return redirect("/")
 
+
 @app.route('/logout')
 def logout():
     session.pop('user')
@@ -40,15 +43,17 @@ def logout():
 @app.route('/user/<user_id>')
 def showUser(user_id):
     session = db.session()
-    papersOfUser = session.query(models.Paper).filter(models.Paper.authors.any(id = user_id))
+    papersOfUser = session.query(models.Paper).filter(models.Paper.authors.any(id=user_id))
     currentUser = session.query(models.User).get(user_id)
     return render_template('userShowPage.html', user=currentUser, papers=papersOfUser)
+
 
 @app.route('/paper/<paper_id>')
 def showPaper(paper_id):
     session = db.session()
     currentPaper = session.query(models.Paper).get(paper_id)
     return render_template('paperShowPage.html', paper=currentPaper)
+
 
 @app.route('/register')
 def showRegisterPage():
@@ -66,6 +71,7 @@ def nothing():
     db.session.commit()
     return redirect("/", code=302)
 
+
 @app.route('/submitpaper/<author_id>', methods=['POST'])
 def submitPaper(author_id):
     title = request.form['title']
@@ -80,6 +86,7 @@ def submitPaper(author_id):
     session.commit()
     return redirect("/user/" + author_id, code=302)
 
+
 @app.route('/addAuthorToPaper/<paper_id>', methods=['POST'])
 def addAuthorToPaper(paper_id):
     email = request.form['email']
@@ -92,11 +99,13 @@ def addAuthorToPaper(paper_id):
 
     return redirect("/paper/" + paper_id, code=302)
 
+
 def len(list):
     counter = 0
     for item in list:
         counter += 1
     return counter
+
 
 @app.route('/addReviewerToPaper/<paper_id>', methods=['POST'])
 def addReviewerToPaper(paper_id):
@@ -111,6 +120,7 @@ def addReviewerToPaper(paper_id):
     session.commit()
 
     return redirect("/paper/" + paper_id, code=302)
+
 
 if __name__ == '__main__':
     dbSeed.init()
