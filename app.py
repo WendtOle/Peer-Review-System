@@ -15,19 +15,18 @@ db = SQLAlchemy(app)
 @app.route('/')
 def index():
     if 'user' in session:
-        return render_template('index.html', user=session['user'])
+        return render_template('index.html')
     else:
-        return render_template('login.html')
+        return render_template('login.html', users=models.User.query.all())
 
 
 @app.route('/login', methods=['POST'])
 def login():
     email = request.form['email']
     password = request.form['password']
-
-    currentUser = db.session().query(models.User).filter_by(email=email).first()
-
+    currentUser = db.session().query(models.User).filter_by(email=email).first_or_404()
     if bcrypt.check_password_hash(currentUser.password, password):
+        session['logged_in'] = True
         session['user'] = currentUser.email
         session['isConferenceChair'] = currentUser.isConferenceChair
     return redirect("/")
@@ -35,6 +34,7 @@ def login():
 
 @app.route('/logout')
 def logout():
+    session.pop('logged_in')
     session.pop('user')
     session.pop('isConferenceChair')
     return redirect('/')
@@ -57,7 +57,7 @@ def showPaper(paper_id):
 
 @app.route('/register')
 def showRegisterPage():
-    return render_template('register.html', users=models.User.query.all())
+    return render_template('register.html')
 
 
 # TODO: check if email already exists

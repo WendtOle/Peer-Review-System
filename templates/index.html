@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Peer Review System</title>
-</head>
-<body>
-    Hey {{ user }} you are logged in!
+{% extends "layout.html" %}
+{% block body %}
+    <br>
+    Hey {{ session.user }} you are logged in!
     <a href="/logout">logout</a>
-</body>
-
-</html>
+{% endblock %}

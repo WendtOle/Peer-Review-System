@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block body %}
 
     <h1>Paper: {{ paper.title }}</h1>
 
@@ -16,7 +11,7 @@
     <tbody>
         {% for user in paper.authors %}
             <tr>
-                user_id:
+                    user_id:
                 <td>{{ user.id }}</td>
                 email:
                 <td>{{ user.email }}</td>
@@ -56,5 +51,5 @@
         <input type="text" name="email">
         <input type="submit" value="Submit!"/>
     </form>
-</body>
-</html>
+
+{% endblock %}

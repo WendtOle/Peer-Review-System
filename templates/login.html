@@ -1,18 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    Login
+{% extends "layout.html" %}
+{% block body %}
+    <br>
+    <h1>Login</h1>
+
     <form action="/login" method="post">
+        Email
+        <br>
         <input type="text" name="email">
+        <br><br>
+        Password
+        <br>
         <input type="text" name="password">
-        <input type="submit" value="Submit!"/>
+        <br><br>
+        <input type="submit" value="Submit"/>
     </form>
 
-    Register a new User:
-    <a href="/register">register</a>
-</body>
-</html>
+    <br>
+    <a href="/register">or register as a new user</a>
+    <br>
+
+    <br>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.isConferenceChair }}</td>
+            </tr>
+            <br>
+        {% endfor %}
+    </tbody>
+{% endblock %}
