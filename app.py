@@ -65,9 +65,16 @@ def showAdminPage():
 
 @app.route('/paper/<paper_id>')
 def showPaper(paper_id):
-    session = db.session()
-    currentPaper = session.query(models.Paper).get(paper_id)
-    return render_template('paperShowPage.html', paper=currentPaper)
+    if 'user' in session:
+        dbSession = db.session()
+        currentPaper = dbSession.query(models.Paper).get(paper_id)
+        authors = currentPaper.authors
+        userAboutToAccess = dbSession.query(models.User).filter(models.User.email == session['user']).first()
+        if session['isConferenceChair'] or userAboutToAccess in authors:
+            return render_template('paperShowPage.html', paper=currentPaper)
+
+    else:
+        return redirect("/", code=302)
 
 
 @app.route('/register')
