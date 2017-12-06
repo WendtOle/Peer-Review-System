@@ -14,6 +14,7 @@ db = SQLAlchemy(app)
 
 @app.route('/')
 def index():
+    print(session)
     if 'user' in session:
         return render_template('index.html')
     else:
@@ -29,7 +30,8 @@ def login():
         session['logged_in'] = True
         session['user'] = currentUser.email
         session['isConferenceChair'] = currentUser.isConferenceChair
-    return redirect("/")
+        session['user_id'] = currentUser.id
+    return redirect("/user/" + str(currentUser.id))
 
 
 @app.route('/logout')
@@ -42,11 +44,16 @@ def logout():
 
 @app.route('/user/<user_id>')
 def showUser(user_id):
-    session = db.session()
-    papersOfUser = session.query(models.Paper).filter(models.Paper.authors.any(id=user_id))
-    currentUser = session.query(models.User).get(user_id)
-    papersToReview = session.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id = user_id))
-    return render_template('userShowPage.html', user=currentUser, papers=papersOfUser, papersToReview = papersToReview)
+    if int(user_id) == session['user_id']:
+        print(session.get('user'))
+        dbSession = db.session()
+        papersOfUser = dbSession.query(models.Paper).filter(models.Paper.authors.any(id=user_id))
+        currentUser = dbSession.query(models.User).get(user_id)
+        papersToReview = dbSession.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id = user_id))
+        return render_template('userShowPage.html', user=currentUser, papers=papersOfUser, papersToReview = papersToReview)
+    else:
+        print('nobody logged in')
+        return redirect("/", code=302)
 
 
 @app.route('/paper/<paper_id>')
