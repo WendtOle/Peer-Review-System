@@ -31,7 +31,7 @@ def login():
         session['user'] = currentUser.email
         session['isConferenceChair'] = currentUser.isConferenceChair
         session['user_id'] = currentUser.id
-    return redirect("/user/" + str(currentUser.id))
+    return redirect("/user")
 
 
 @app.route('/logout')
@@ -42,17 +42,15 @@ def logout():
     return redirect('/')
 
 
-@app.route('/user/<user_id>')
-def showUser(user_id):
-    if int(user_id) == session['user_id']:
-        print(session.get('user'))
+@app.route('/user')
+def showUser():
+    if 'user' in session:
         dbSession = db.session()
-        papersOfUser = dbSession.query(models.Paper).filter(models.Paper.authors.any(id=user_id))
-        currentUser = dbSession.query(models.User).get(user_id)
-        papersToReview = dbSession.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id = user_id))
+        papersOfUser = dbSession.query(models.Paper).filter(models.Paper.authors.any(id=session['user_id']))
+        currentUser = dbSession.query(models.User).get(session['user_id'])
+        papersToReview = dbSession.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id = session['user_id']))
         return render_template('userShowPage.html', user=currentUser, papers=papersOfUser, papersToReview = papersToReview)
     else:
-        print('nobody logged in')
         return redirect("/", code=302)
 
 
