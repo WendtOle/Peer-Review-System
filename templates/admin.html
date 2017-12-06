@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <tbody>
+        {% for paper in papers %}
+            <tr>
+                <br>
+                <td>{{ paper.id }}</td>
+                <a href="/paper/{{ paper.id }}">{{ paper.title }}</a>
+            </tr>
+            <br>
+        {% endfor %}
+    </tbody>
+
+{% endblock %}

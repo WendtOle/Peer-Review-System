@@ -45,11 +45,20 @@ def logout():
 @app.route('/user')
 def showUser():
     if 'user' in session:
+        if session['isConferenceChair']:
+            return redirect("/admin",code=302)
         dbSession = db.session()
         papersOfUser = dbSession.query(models.Paper).filter(models.Paper.authors.any(id=session['user_id']))
         currentUser = dbSession.query(models.User).get(session['user_id'])
         papersToReview = dbSession.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id = session['user_id']))
         return render_template('userShowPage.html', user=currentUser, papers=papersOfUser, papersToReview = papersToReview)
+    else:
+        return redirect("/", code=302)
+
+@app.route('/admin')
+def showAdminPage():
+    if 'user' in session and session['isConferenceChair']:
+        return render_template('admin.html',papers = models.Paper.query.all())
     else:
         return redirect("/", code=302)
 
