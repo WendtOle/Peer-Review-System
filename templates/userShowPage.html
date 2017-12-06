@@ -52,8 +52,17 @@
                 paper_id:
                 <td>{{ paper.id }}</td>
                 <br>
+                <form action="/submitScore/{{ user.id }}/{{ paper.id }}" method="post">
+                    <input type="range"  min="-2" max="2" name="score" onchange="showScore(this.value)" />
+                    <input type="submit" value="Submit!"/>
+                </form>
             </tr>
             <br>
         {% endfor %}
     </tbody>
+
+<span id="range">0</span>
+<script type="text/javascript">
+function showScore(newValue) { document.getElementById("range").innerHTML=newValue; }
+</script>
 {% endblock %}
