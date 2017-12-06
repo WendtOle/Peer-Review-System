@@ -8,17 +8,17 @@ def init():
     session = app.db.session()
 
     user01 = models.User(email='conferenceChairMen@mail.com',
-                         password=app.bcrypt.generate_password_hash('12345').decode('utf-8'), isConferenceChair=True)
+                         password=app.bcrypt.generate_password_hash('conferenceChairMen').decode('utf-8'), isConferenceChair=True)
     user02 = models.User(email='ole-wendt@freenet.de',
-                         password=app.bcrypt.generate_password_hash('shadowNinja').decode('utf-8'),
+                         password=app.bcrypt.generate_password_hash('ole-wendt').decode('utf-8'),
                          isConferenceChair=False)
     user03 = models.User(email='timurOezer@web.de',
-                         password=app.bcrypt.generate_password_hash('forgetPassword').decode('utf-8'),
+                         password=app.bcrypt.generate_password_hash('timur').decode('utf-8'),
                          isConferenceChair=False)
     user04 = models.User(email='tino@schulz.de',
-                         password=app.bcrypt.generate_password_hash('schulzigesPasswort').decode('utf-8'),
+                         password=app.bcrypt.generate_password_hash('tino').decode('utf-8'),
                          isConferenceChair=False)
-    user05 = models.User(email='spino@mulz.de', password=app.bcrypt.generate_password_hash('ladida').decode('utf-8'),
+    user05 = models.User(email='spino@mulz.de', password=app.bcrypt.generate_password_hash('spino').decode('utf-8'),
                          isConferenceChair=False)
 
     session.add(user01)
