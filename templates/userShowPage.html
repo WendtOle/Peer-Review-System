@@ -22,7 +22,7 @@
         {% for paper in papers %}
             <tr>
                 <br/>
-                <b><td>{{ paper.title }}</td></b>
+                <b><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></b>
                 <br>
                 paper_id:
                 <td>{{ paper.id }}</td>
