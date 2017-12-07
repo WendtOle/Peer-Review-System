@@ -52,7 +52,9 @@
                 paper_id:
                 <td>{{ paper.id }}</td>
                 <br>
-                <form action="/submitScore/{{ user.id }}/{{ paper.id }}" method="post">
+                <form action="/submitScore" method="post">
+                    <input type="text" hidden="True" name="paper_id" value="{{ paper.id }}"/>
+                    <input type="text" hidden="True" name="user_id" value="{{ user.id }}"/>
                     <input type="range"  min="-2" max="2" name="score" onchange="showScore(this.value)" />
                     <input type="submit" value="Submit!"/>
                 </form>

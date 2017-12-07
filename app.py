@@ -143,15 +143,19 @@ def addReviewerToPaper(paper_id):
 
     return redirect("/paper/" + paper_id, code=302)
 
-@app.route('/submitScore/<user_id>/<int:paper_id>', methods=['POST'])
-def submitPaperScore(user_id):
-    post_id = request.args.get('paper_id')
-    print(post_id)
+@app.route('/submitScore', methods=['POST'])
+def submitPaperScore():
     score = request.form['score']
+    paper_id = request.form['paper_id']
+    user_id = request.form['user_id']
+
     session = db.session()
 
-    session.query(models.user_paper_review_relation_table).filter(models.user_paper_review_relation_table.user_id == user_id).first
-    return redirect("/user/" + user_id, code=302)
+    #queryAnswer = session.query(models.user_paper_review).filter(models.user_paper_review.user_id == user_id).first
+
+    #print(queryAnswer)
+
+    return redirect("/user", code=302)
 
 if __name__ == '__main__':
     dbSeed.init()
