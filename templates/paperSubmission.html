@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+    <br/>
+    <h1>Paper Submition:</h1>
+
+    <form action="/submitpaper/{{ session.user }}" method="post">
+        Paper Title
+        <br>
+        <input type="text" name="title">
+        <br><br>
+        Abstract
+        <br>
+        <input type="text" name="abstract">
+        <br><br>
+        <input type="submit" value="Submit!"/>
+        Authors
+    </form>
+{% endblock %}

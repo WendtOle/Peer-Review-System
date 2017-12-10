@@ -1,70 +1,35 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <h1>User: {{ user.email }}</h1>
-
-    user_id: {{ user.id }}
-    password: {{ user.password }}
     <br/>
+    <h1>Submitted Papers:</h1>
 
-    Paper Submition:
-    <br>
-    <form action="/submitpaper/{{ user.id }}" method="post">
-        <input type="text" name="title">
-        <input type="text" name="abstract">
-        <input type="submit" value="Submit!"/>
-    </form>
-
-    <br/>
-    Papers:
-    <br>
     <tbody>
         {% for paper in papers %}
             <tr>
-                <br/>
-                <b><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></b>
+                <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
+                <b>authors:</b>
                 <br>
-                paper_id:
-                <td>{{ paper.id }}</td>
-                <br>
-                authors:
                 {% for user in paper.authors %}
                     <tr>
-                    user_id:
-                    <td>{{ user.id }}</td>
-                    email:
-                    <td>{{ user.email }}</td>
+                    <td>{{ user.email }}</td> <br>
                 {% endfor %}
+                <br>
+                <b>Status:</b>
+                <br>
+                <td>{{ paper.status.value }}</td>
+                <br><br>
             </tr>
-            <br>
         {% endfor %}
     </tbody>
 
-    <br/>
-    Papers to Review:
-    <br/>
+    <h1>Papers to Review:</h1>
     <tbody>
         {% for paper in papersToReview %}
-            <br/>
             <tr>
-                <b><td>{{ paper.title }}</td></b>
-                <br>
-                paper_id:
-                <td>{{ paper.id }}</td>
-                <br>
-                <form action="/submitScore" method="post">
-                    <input type="text" hidden="True" name="paper_id" value="{{ paper.id }}"/>
-                    <input type="text" hidden="True" name="user_id" value="{{ user.id }}"/>
-                    <input type="range"  min="-2" max="2" name="score" onchange="showScore(this.value)" />
-                    <input type="submit" value="Submit!"/>
-                </form>
+                <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
             </tr>
             <br>
         {% endfor %}
     </tbody>
-
-<span id="range">0</span>
-<script type="text/javascript">
-function showScore(newValue) { document.getElementById("range").innerHTML=newValue; }
-</script>
 {% endblock %}

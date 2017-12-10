@@ -39,6 +39,7 @@ def logout():
     session.pop('logged_in')
     session.pop('user')
     session.pop('isConferenceChair')
+    session.pop('user_id')
     return redirect('/')
 
 
@@ -156,6 +157,23 @@ def submitPaperScore():
     #print(queryAnswer)
 
     return redirect("/user", code=302)
+
+@app.route('/paperSubmission')
+def paperSubmissionPage():
+    if 'user' not in session:
+        return redirect("/")
+
+    return render_template('paperSubmission.html')
+
+@app.route('/reviewSubmission')
+def reviewSubmissionPage():
+    if 'user' not in session:
+        return redirect("/")
+
+    dbSession = db.session()
+    currentUser = dbSession.query(models.User).get(session['user_id'])
+    papersToReview = dbSession.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id=session['user_id']))
+    return render_template('reviewSubmission.html', user=currentUser, papersToReview=papersToReview)
 
 if __name__ == '__main__':
     dbSeed.init()
