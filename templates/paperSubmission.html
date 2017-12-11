@@ -3,7 +3,7 @@
     <br/>
     <h1>Paper Submition:</h1>
 
-    <form action="/submitpaper/{{ session.user }}" method="post">
+    <form action="/paper/" method="post">
         Paper Title
         <br>
         <input type="text" name="title">
@@ -12,7 +12,15 @@
         <br>
         <input type="text" name="abstract">
         <br><br>
-        <input type="submit" value="Submit!"/>
         Authors
+        <br>
+        <select name="authors" multiple>
+            {% for user in allUsers %}
+                <option value="{{ user.email }}">{{ user.email }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <input type="submit" value="Submit!"/>
     </form>
+
 {% endblock %}

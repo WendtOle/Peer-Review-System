@@ -20,17 +20,6 @@
         {% endfor %}
     </tbody>
 
-    {% if not session.isConferenceChair %}
-
-    <br/>
-    Want to add an Author to a Paper:
-    <form action="/addAuthorToPaper/{{ paper.id }}" method="post">
-        email:
-        <input type="text" name="email">
-        <input type="submit" value="Submit!"/>
-    </form>
-    {% endif %}
-
     {% if session.isConferenceChair %}
     <br/>
     Reviewers:
