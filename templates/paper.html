@@ -1,24 +1,30 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <h1>Paper: {{ paper.title }}</h1>
+    <br>
+    <h1>{{ paper.title }}</h1>
+    <br>
 
-    {{ paper.body }}
-
-    Authors:
-
+    <b>by:</b>
     <br>
     <tbody>
         {% for user in paper.authors %}
-            <tr>
-                    user_id:
-                <td>{{ user.id }}</td>
-                email:
-                <td>{{ user.email }}</td>
-            </tr>
+            {{ user.email }}
             <br>
         {% endfor %}
     </tbody>
+    <br>
+
+    <b>Abstract:</b>
+    <br>
+    {{ paper.abstract }}
+    <br><br>
+
+    <b>Status:</b>
+    <br>
+    {{ paper.status.value }}
+    <br>
+
 
     {% if session.isConferenceChair %}
     <br/>

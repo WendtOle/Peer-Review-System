@@ -64,7 +64,7 @@ def showPaper(paper_id):
         authors = currentPaper.authors
         userAboutToAccess = dbSession.query(models.User).filter(models.User.email == session['user']).first()
         if session['isConferenceChair'] or userAboutToAccess in authors:
-            return render_template('paperShowPage.html', paper=currentPaper)
+            return render_template('paper.html', paper=currentPaper)
         else:
             return redirect("/", code=302)
     return redirect("/", code=302)
