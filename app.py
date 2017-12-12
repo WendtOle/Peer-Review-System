@@ -8,6 +8,7 @@ import os
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 bcrypt = Bcrypt(app)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///PeerReviewSystem.db'
 db = SQLAlchemy(app)
 
@@ -17,10 +18,9 @@ def index():
     if 'user' in session:
         if session['isConferenceChair']:
             return redirect("/admin", code=302)
-        dbSession = db.session()
-        papersOfUser = dbSession.query(models.Paper).filter(models.Paper.authors.any(id=session['user_id']))
-        currentUser = dbSession.query(models.User).get(session['user_id'])
-        papersToReview = dbSession.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id=session['user_id']))
+        papersOfUser = db.session.query(models.Paper).filter(models.Paper.authors.any(id=session['user_id']))
+        currentUser = db.session.query(models.User).get(session['user_id'])
+        papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id=session['user_id']))
         return render_template('index.html', user=currentUser, papers=papersOfUser, papersToReview=papersToReview)
     else:
         return render_template('login.html', users=models.User.query.all())
@@ -30,7 +30,7 @@ def index():
 def login():
     email = request.form['email']
     password = request.form['password']
-    currentUser = db.session().query(models.User).filter_by(email=email).first_or_404()
+    currentUser = db.session.query(models.User).filter_by(email=email).first_or_404()
     if bcrypt.check_password_hash(currentUser.password, password):
         session['logged_in'] = True
         session['user'] = currentUser.email
@@ -59,10 +59,9 @@ def showAdminPage():
 @app.route('/paper/<paper_id>')
 def showPaper(paper_id):
     if 'user' in session:
-        dbSession = db.session()
-        currentPaper = dbSession.query(models.Paper).get(paper_id)
+        currentPaper = db.session.query(models.Paper).get(paper_id)
         authors = currentPaper.authors
-        userAboutToAccess = dbSession.query(models.User).filter(models.User.email == session['user']).first()
+        userAboutToAccess = db.session.query(models.User).filter(models.User.email == session['user']).first()
         if session['isConferenceChair'] or userAboutToAccess in authors:
             return render_template('paper.html', paper=currentPaper)
         else:
@@ -96,16 +95,14 @@ def submitPaper():
 
     paper = models.Paper(title=title, abstract=abstract)
 
-    dbSession = db.session()
-
-    dbSession.add(paper)
-    dbSession.commit()
+    db.session.add(paper)
+    db.session.commit()
 
     for author in authors:
-        userToAdd = dbSession.query(models.User).filter(models.User.email == author).first()
-        paper = dbSession.query(models.Paper).get(paper.id)
+        userToAdd = db.session.query(models.User).filter(models.User.email == author).first()
+        paper = db.session.query(models.Paper).get(paper.id)
         paper.authors.append(userToAdd)
-    dbSession.commit()
+    db.session.commit()
 
     return redirect("/paper/" + str(paper.id), code=302)
 
@@ -120,8 +117,6 @@ def len(list):
 @app.route('/addReviewerToPaper/<paper_id>', methods=['POST'])
 def addReviewerToPaper(paper_id):
     email = request.form['email']
-    session = db.session()
-
     reviewerToAdd = session.query(models.User).filter(models.User.email == email).first()
     paper = session.query(models.Paper).get(paper_id)
     authors = paper.authors
@@ -138,9 +133,7 @@ def submitPaperScore():
     paper_id = request.form['paper_id']
     user_id = request.form['user_id']
 
-    session = db.session()
-
-    # queryAnswer = session.query(models.user_paper_review).filter(models.user_paper_review.user_id == user_id).first
+    # queryAnswer = db.session.query(models.user_paper_review).filter(models.user_paper_review.user_id == user_id).first
 
     # print(queryAnswer)
 
@@ -151,8 +144,7 @@ def submitPaperScore():
 def paperSubmissionPage():
     if 'user' not in session:
         return redirect("/")
-    dbSession = db.session()
-    allUsers = dbSession.query(models.User).all()
+    allUsers = db.session.query(models.User).all()
     return render_template('paperSubmission.html', allUsers=allUsers)
 
 
@@ -161,9 +153,8 @@ def reviewSubmissionPage():
     if 'user' not in session:
         return redirect("/")
 
-    dbSession = db.session()
-    currentUser = dbSession.query(models.User).get(session['user_id'])
-    papersToReview = dbSession.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id=session['user_id']))
+    currentUser = db.session.query(models.User).get(session['user_id'])
+    papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id=session['user_id']))
     return render_template('reviewSubmission.html', user=currentUser, papersToReview=papersToReview)
 
 
