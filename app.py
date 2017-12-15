@@ -144,7 +144,7 @@ def submitPaperScore():
 def paperSubmissionPage():
     if 'user' not in session:
         return redirect("/")
-    allUsers = db.session.query(models.User).all()
+    allUsers = db.session.query(models.User).filter(models.User.id != session['user_id'])
     return render_template('paperSubmission.html', allUsers=allUsers)
 
 
