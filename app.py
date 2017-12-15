@@ -61,13 +61,13 @@ def showPaper(paper_id):
     if 'user' in session:
         currentPaper = db.session.query(models.Paper).get(paper_id)
         authors = currentPaper.authors
+        reviewers = currentPaper.reviewersOfTable
         userAboutToAccess = db.session.query(models.User).filter(models.User.email == session['user']).first()
-        if session['isConferenceChair'] or userAboutToAccess in authors:
+        if session['isConferenceChair'] or userAboutToAccess in authors or userAboutToAccess in reviewers:
             return render_template('paper.html', paper=currentPaper)
         else:
-            return redirect("/", code=302)
-    return redirect("/", code=302)
-
+            return redirect("/", code=307)
+    return redirect("/", code=303)
 
 @app.route('/register')
 def showRegisterPage():
