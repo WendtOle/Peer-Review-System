@@ -26,10 +26,16 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/reviewSubmission">Review Submission</a>
                     </li>
+
+                    {% if session.isConferenceChair %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/reviewer">Assignment Of Reviewers</a>
+                        </li>
+                    {% endif %}
+
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">log out ({{ session.user }})</a>
                     </li>
-
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="/">Log-in</a>

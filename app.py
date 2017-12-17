@@ -16,11 +16,9 @@ db = SQLAlchemy(app)
 @app.route('/')
 def index():
     if 'user' in session:
-        if session['isConferenceChair']:
-            return redirect("/admin", code=302)
         papersOfUser = db.session.query(models.Paper).filter(models.Paper.authors.any(id=session['user_id']))
         currentUser = db.session.query(models.User).get(session['user_id'])
-        papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id=session['user_id']))
+        papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewers.any(id=session['user_id']))
         return render_template('index.html', user=currentUser, papers=papersOfUser, papersToReview=papersToReview)
     else:
         return render_template('login.html', users=models.User.query.all())
@@ -48,13 +46,6 @@ def logout():
     return redirect('/')
 
 
-@app.route('/admin')
-def showAdminPage():
-    if 'user' in session and session['isConferenceChair']:
-        return render_template('admin.html', papers=models.Paper.query.all())
-    else:
-        return redirect("/", code=302)
-
 @app.route('/paper/<paper_id>')
 def showPaper(paper_id):
     if 'user' in session:
@@ -74,20 +65,25 @@ def showPaper(paper_id):
                 return abortBecauseNotAuthorOrReviewer()
     return abortBecauseNotLoggedIn()
 
+
 def isUserAutorOrReviewer(paper):
     authors = paper.authors
-    reviewers = paper.reviewersOfTable
+    reviewers = paper.reviewers
     actualUser = db.session.query(models.User).filter(models.User.email == session['user']).first()
     return actualUser in authors or actualUser in reviewers
+
 
 def abortBecauseNotAuthorOrReviewer():
     return redirect("/", code=307)
 
+
 def abortBecauseNotLoggedIn():
     return redirect("/", code=303)
 
+
 def getScoreRowsQuery2(paperId):
     return db.session.query(models.PaperScores).filter(models.PaperScores.paperId == paperId)
+
 
 @app.route('/register')
 def showRegisterPage():
@@ -104,6 +100,7 @@ def nothing():
     db.session.add(models.User(email=email, password=password_hashed, isConferenceChair=False))
     db.session.commit()
     return redirect("/", code=302)
+
 
 @app.route('/paper/', methods=['POST'])
 def submitPaper():
@@ -135,13 +132,14 @@ def len(list):
 
 @app.route('/addReviewerToPaper/<paper_id>', methods=['POST'])
 def addReviewerToPaper(paper_id):
-    email = request.form['email']
-    reviewerToAdd = session.query(models.User).filter(models.User.email == email).first()
-    paper = session.query(models.Paper).get(paper_id)
-    authors = paper.authors
-    if not reviewerToAdd in authors and len(paper.reviewersOfTable) < 3:
-        paper.reviewersOfTable.append(reviewerToAdd)
-    session.commit()
+    reviewers = request.form.getlist('reviewers')
+
+    for user in reviewers:
+        reviewerToAdd = db.session.query(models.User).filter(models.User.email == user).first()
+
+    paper = db.session.query(models.Paper).get(paper_id)
+    paper.reviewers.append(reviewerToAdd)
+    db.session.commit()
 
     return redirect("/paper/" + paper_id, code=302)
 
@@ -152,18 +150,20 @@ def submitPaperScore():
     paper_id = request.form['paper_id']
     user_id = request.form['user_id']
 
-    scoreRow = getScoreRowsQuery(paper_id,user_id).first()
-    if(scoreRow != None):
+    scoreRow = getScoreRowsQuery(paper_id, user_id).first()
+    if (scoreRow != None):
         scoreRow.score = score
     else:
         db.session.add(models.PaperScores(paperId=paper_id, userId=user_id, score=score))
     db.session.commit()
     return redirect("/", code=302)
 
+
 def getScoreRowsQuery(paperId, userId):
     scoreRows = db.session.query(models.PaperScores).filter(
         models.PaperScores.userId == userId and models.PaperScores.paperId == paperId)
     return scoreRows
+
 
 @app.route('/paperSubmission')
 def paperSubmissionPage():
@@ -179,8 +179,18 @@ def reviewSubmissionPage():
         return redirect("/")
 
     currentUser = db.session.query(models.User).get(session['user_id'])
-    papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewersOfTable.any(id=session['user_id']))
+    papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewers.any(id=session['user_id']))
     return render_template('reviewSubmission.html', user=currentUser, papersToReview=papersToReview)
+
+
+@app.route('/reviewer', methods=['GET'])
+def showAssignmentOfReviewers():
+    if 'isConferenceChair' in session:
+        papers = db.session.query(models.Paper).all()
+        # TODO: get only users which have the reviewer status
+        reviewer = db.session.query(models.User).all()
+        return render_template('assignmentOfReviewers.html', papers=papers, reviewers=reviewer)
+    return redirect('/')
 
 
 if __name__ == '__main__':

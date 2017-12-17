@@ -35,9 +35,9 @@ def init():
                            abstract="Fuchunkulus", authors=[user01])
     session.add(paper02)
 
-    paper02.reviewersOfTable.append(user02)
-    paper02.reviewersOfTable.append(user03)
-    paper02.reviewersOfTable.append(user04)
+    paper02.reviewers.append(user02)
+    paper02.reviewers.append(user03)
+    paper02.reviewers.append(user04)
 
     session.add(models.Paper(
         title="Die verblüffende und zugleich erschreckende Wahrheit hinter der Herstellung traditioneller Weidenkörbe im alten Polen",
