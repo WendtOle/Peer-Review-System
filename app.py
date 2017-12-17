@@ -133,12 +133,18 @@ def submitPaperScore():
     paper_id = request.form['paper_id']
     user_id = request.form['user_id']
 
-    #TODO
-    print("score: " + score + " paper_id: " + paper_id + " user_id: " + user_id);
-    db.session.add(models.PaperScores(paperId = paper_id, userId=user_id, score = score))
+    scoreRow = getScoreRow(paper_id,user_id)
+    if(scoreRow != None):
+        scoreRow.score = score
+    else:
+        db.session.add(models.PaperScores(paperId=paper_id, userId=user_id, score=score))
     db.session.commit()
     return redirect("/", code=302)
 
+def getScoreRow(paperId, userId):
+    scoreRow = db.session.query(models.PaperScores).filter(
+        models.PaperScores.userId == userId and models.PaperScores.paperId == paperId).first()
+    return scoreRow
 
 @app.route('/paperSubmission')
 def paperSubmissionPage():
