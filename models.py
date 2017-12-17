@@ -9,7 +9,6 @@ user_paper_relation_table = db.Table('user_paper', db.Model.metadata,
 user_paper_review_relation_table = db.Table('user_paper_review', db.Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
     db.Column('paper_id', db.Integer, db.ForeignKey('papers.id')),
-    db.Column('score',db.Integer)
 )
 
 class PaperStatus(enum.Enum):
@@ -36,3 +35,10 @@ class Paper(db.Model):
     reviewScore = db.Column(db.Integer)
     authors = db.relationship("User", secondary=user_paper_relation_table)
     reviewersOfTable = db.relationship("User", secondary=user_paper_review_relation_table)
+
+class PaperScores(db.Model):
+    __tablename__ = 'paperScores'
+    id = db.Column(db.Integer, primary_key=True)
+    paperId = db.Column(db.Integer)
+    userId = db.Column(db.Integer)
+    score = db.Column(db.Integer)
