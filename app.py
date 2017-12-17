@@ -64,10 +64,20 @@ def showPaper(paper_id):
         reviewers = currentPaper.reviewersOfTable
         userAboutToAccess = db.session.query(models.User).filter(models.User.email == session['user']).first()
         if session['isConferenceChair'] or userAboutToAccess in authors or userAboutToAccess in reviewers:
-            return render_template('paper.html', paper=currentPaper)
+
+            scores = getScoreRowsQuery2(paper_id).all()
+            finalScore = 0
+            for score in scores:
+                finalScore += score.score
+            finalScore /= len(scores)
+
+            return render_template('paper.html', paper=currentPaper, scores = scores, finalScore = finalScore)
         else:
             return redirect("/", code=307)
     return redirect("/", code=303)
+
+def getScoreRowsQuery2(paperId):
+    return db.session.query(models.PaperScores).filter(models.PaperScores.paperId == paperId)
 
 @app.route('/register')
 def showRegisterPage():
@@ -133,7 +143,7 @@ def submitPaperScore():
     paper_id = request.form['paper_id']
     user_id = request.form['user_id']
 
-    scoreRow = getScoreRow(paper_id,user_id)
+    scoreRow = getScoreRowsQuery(paper_id,user_id).first()
     if(scoreRow != None):
         scoreRow.score = score
     else:
@@ -141,10 +151,10 @@ def submitPaperScore():
     db.session.commit()
     return redirect("/", code=302)
 
-def getScoreRow(paperId, userId):
-    scoreRow = db.session.query(models.PaperScores).filter(
-        models.PaperScores.userId == userId and models.PaperScores.paperId == paperId).first()
-    return scoreRow
+def getScoreRowsQuery(paperId, userId):
+    scoreRows = db.session.query(models.PaperScores).filter(
+        models.PaperScores.userId == userId and models.PaperScores.paperId == paperId)
+    return scoreRows
 
 @app.route('/paperSubmission')
 def paperSubmissionPage():

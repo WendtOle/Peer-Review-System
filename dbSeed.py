@@ -13,7 +13,7 @@ def init():
                          password=app.bcrypt.generate_password_hash('ole-wendt').decode('utf-8'),
                          isConferenceChair=False)
     user03 = models.User(email='timurOezer@web.de',
-                         password=app.bcrypt.generate_password_hash('timur').decode('utf-8'),
+                         password=app.bcrypt.generate_password_hash('timurOezer').decode('utf-8'),
                          isConferenceChair=False)
     user04 = models.User(email='tino@schulz.de',
                          password=app.bcrypt.generate_password_hash('tino').decode('utf-8'),
