@@ -63,17 +63,19 @@ def showPaper(paper_id):
         authors = currentPaper.authors
         reviewers = currentPaper.reviewersOfTable
         userAboutToAccess = db.session.query(models.User).filter(models.User.email == session['user']).first()
-        if session['isConferenceChair'] or userAboutToAccess in authors or userAboutToAccess in reviewers:
-
+        if session['isConferenceChair']:
             scores = getScoreRowsQuery2(paper_id).all()
             finalScore = 0
             for score in scores:
                 finalScore += score.score
             finalScore /= len(scores)
 
-            return render_template('paper.html', paper=currentPaper, scores = scores, finalScore = finalScore)
+            return render_template('paper.html', paper=currentPaper, scores=scores, finalScore=finalScore)
         else:
-            return redirect("/", code=307)
+            if userAboutToAccess in authors or userAboutToAccess in reviewers:
+                return render_template('paper.html', paper=currentPaper)
+            else:
+                return redirect("/", code=307)
     return redirect("/", code=303)
 
 def getScoreRowsQuery2(paperId):
