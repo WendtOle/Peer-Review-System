@@ -164,8 +164,12 @@ def getScoreRowsQuery(paperId, userId):
 def paperSubmissionPage():
     if not isLoggedIn() or isAdmin():
         return redirect("/")
-    allUsers = db.session.query(models.User).filter(models.User.id != session['user_id'])
-    return render_template('paperSubmission.html', allUsers=allUsers)
+    userThatCouldBeCoAuthors = []
+    allUsers = db.session.query(models.User).all()
+    for user in allUsers:
+        if user.id != session['user_id'] and not user.isConferenceChair:
+            userThatCouldBeCoAuthors.append(user)
+    return render_template('paperSubmission.html', allUsers=userThatCouldBeCoAuthors)
 
 
 @app.route('/reviewSubmission')
