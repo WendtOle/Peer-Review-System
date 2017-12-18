@@ -129,15 +129,16 @@ def len(list):
 def addReviewerToPaper(paper_id):
     reviewers = request.form.getlist('reviewers')
 
-    for user in reviewers:
-        reviewerToAdd = db.session.query(models.User).filter(models.User.email == user).first()
-
     paper = db.session.query(models.Paper).get(paper_id)
-    paper.reviewers.append(reviewerToAdd)
-    db.session.commit()
+    amountOfReviewersToAdd = len(reviewers)
+    amountOfPossibleReviewersToAdd = 3 - len(paper.reviewers)
 
-    return redirect("/paper/" + paper_id, code=302)
-
+    if amountOfPossibleReviewersToAdd >= amountOfReviewersToAdd:
+        for user in reviewers:
+            reviewerToAdd = db.session.query(models.User).filter(models.User.email == user).first()
+            paper.reviewers.append(reviewerToAdd)
+        db.session.commit()
+    return redirect("/reviewer", code=302)
 
 @app.route('/submitScore', methods=['POST'])
 def submitPaperScore():
@@ -193,7 +194,8 @@ def showAssignmentOfReviewers():
             for user in allUsers:
                 if not user.isConferenceChair and user not in paper.reviewers and user not in paper.authors:
                     possibleReviewers.append(user)
-            paperWithPossibleReviewers.append({'paper':paper, 'possibleReviewers': possibleReviewers})
+            amountOfPossibleReviewers = 3 - len(paper.reviewers)
+            paperWithPossibleReviewers.append({'paper':paper, 'possibleReviewers': possibleReviewers, 'amountOfPossibleReviewers':amountOfPossibleReviewers})
         return render_template('assignmentOfReviewers.html', paperWithPossibleReviewers= paperWithPossibleReviewers)
     return redirect("/")
 
