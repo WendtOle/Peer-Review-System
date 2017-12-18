@@ -21,17 +21,19 @@
     {{ paper.status.value }}
     <br>
     <br>
-    <tbody>
-        {% for score in scores %}
-            <tr>
-                user_id:
-                <td>{{ score.userId }}</td>
-                score:
-                <td>{{ score.score }}</td>
-            </tr>
-            <br>
-        {% endfor %}
-    </tbody>
+    {% if session.isConferenceChair %}
+        <tbody>
+            {% for score in scores %}
+                <tr>
+                    user_id:
+                    <td>{{ score.userId }}</td>
+                    score:
+                    <td>{{ score.score }}</td>
+                </tr>
+                <br>
+            {% endfor %}
+        </tbody>
 
-    <b>FinalScore:</b> {{ finalScore}}
+        <b>FinalScore:</b> {{ finalScore}}
+    {% endif %}
 {% endblock %}

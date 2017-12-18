@@ -42,4 +42,13 @@ def init():
     session.add(models.Paper(
         title="Die verblüffende und zugleich erschreckende Wahrheit hinter der Herstellung traditioneller Weidenkörbe im alten Polen",
         abstract="Fuchunkulus", authors=[user02]))
+
+    session.commit()
+
+    session.add(models.PaperScores(paperId=paper02.id, userId=user02.id,score=-2))
+    session.add(models.PaperScores(paperId=paper02.id, userId=user03.id, score=1))
+    session.add(models.PaperScores(paperId=paper02.id, userId=user01.id, score=2))
+
+    session = app.db.session()
+
     session.commit()
