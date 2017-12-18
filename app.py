@@ -185,12 +185,12 @@ def reviewSubmissionPage():
 
 @app.route('/reviewer', methods=['GET'])
 def showAssignmentOfReviewers():
-    if 'isConferenceChair' in session:
+    if 'isConferenceChair' in session and session['isConferenceChair']:
         papers = db.session.query(models.Paper).all()
         # TODO: get only users which have the reviewer status
         reviewer = db.session.query(models.User).all()
         return render_template('assignmentOfReviewers.html', papers=papers, reviewers=reviewer)
-    return redirect('/')
+    return redirect("/")
 
 
 if __name__ == '__main__':
