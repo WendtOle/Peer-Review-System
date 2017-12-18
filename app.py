@@ -186,9 +186,15 @@ def reviewSubmissionPage():
 def showAssignmentOfReviewers():
     if isLoggedIn() and isAdmin():
         papers = db.session.query(models.Paper).all()
-        # TODO: get only users which have the reviewer status
-        reviewer = db.session.query(models.User).all()
-        return render_template('assignmentOfReviewers.html', papers=papers, reviewers=reviewer)
+        allUsers = db.session.query(models.User).all()
+        paperWithPossibleReviewers = []
+        for paper in papers:
+            possibleReviewers = []
+            for user in allUsers:
+                if not user.isConferenceChair and user not in paper.reviewers and user not in paper.authors:
+                    possibleReviewers.append(user)
+            paperWithPossibleReviewers.append({'paper':paper, 'possibleReviewers': possibleReviewers})
+        return render_template('assignmentOfReviewers.html', paperWithPossibleReviewers= paperWithPossibleReviewers)
     return redirect("/")
 
 def isLoggedIn():

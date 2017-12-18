@@ -4,12 +4,12 @@
         <br>
         <h1>Assign Reviewers:</h1>
         <br>
-        {% for paper in papers %}
-            <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
+        {% for currentPaper in paperWithPossibleReviewers %}
+            <h3><a href="/paper/{{ currentPaper.paper.id }}">{{ currentPaper.paper.title }}</a></h3>
             <b>Reviewers:</b>
             <br>
             <tbody>
-                {% for reviewer in paper.reviewers %}
+                {% for reviewer in currentPaper.paper.reviewers %}
                     <tr>
                         <td>{{ reviewer.email }}</td>
                     </tr>
@@ -19,9 +19,9 @@
 
             <br/>
             <b>Add an Reviewer:</b>
-            <form action="/addReviewerToPaper/{{ paper.id }}" method="post">
+            <form action="/addReviewerToPaper/{{ currentPaper.paper.id }}" method="post">
                 <select name="reviewers" multiple>
-                {% for reviewer in reviewers %}
+                {% for reviewer in currentPaper.possibleReviewers %}
                     <option value="{{ reviewer.email }}">{{ reviewer.email }}</option>
                 {% endfor %}
                 </select>
