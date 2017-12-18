@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <br/>
+    <h1>All Papers:</h1>
+
+    <tbody>
+        {% for currentPaper in paperWithScores %}
+            <tr>
+                <h3><a href="/paper/{{ currentPaper.paper.id }}">{{ currentPaper.paper.title }}</a></h3>
+                <br>
+                <b>authors:</b>
+                <br>
+                {% for user in currentPaper.paper.authors %}
+                    <tr>
+                    <td>{{ user.email }}</td> <br>
+                {% endfor %}
+                <br>
+                <b>Status:</b>
+                <br>
+                <td>{{ currentPaper.paper.status.value }}</td>
+                <br><br>
+            </tr>
+
+            <tbody>
+            {% for score in currentPaper.scores %}
+                <tr>
+                    user_id:
+                    <td>{{ score.userId }}</td>
+                    score:
+                    <td>{{ score.score }}</td>
+                </tr>
+                <br>
+            {% endfor %}
+        </tbody>
+
+        <b>FinalScore:</b> {{ currentPaper.finalScore}}
+
+        <form action="/submitDecision" method="post">
+                    <input type="text" hidden="True" name="paper_id" value="{{ currentPaper.paper.id }}"/>
+                    <input type="radio" name="status" value=underReview> under review </input><br>
+                    <input type="radio" name="status" value=accepted> accepted </input><br>
+                    <input type="radio" name="status" value=rejected> rejected </input><br>
+                    <br>
+                    <input type="submit" value="Submit!"/>
+                    <br>
+                </form>
+
+        {% endfor %}
+    </tbody>
+{% endblock %}

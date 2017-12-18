@@ -199,6 +199,38 @@ def showAssignmentOfReviewers():
         return render_template('assignmentOfReviewers.html', paperWithPossibleReviewers= paperWithPossibleReviewers)
     return redirect("/")
 
+@app.route('/paperDecision', methods=['GET'])
+def finalDecision():
+    if isLoggedIn() and isAdmin():
+        papers = db.session.query(models.Paper).all()
+        paperWithScores = []
+        for paper in papers:
+            scores = getScoreRowsQuery2(paper.id).all()
+            finalScore = 0
+            for score in scores:
+                finalScore += score.score
+            if (len(scores) > 0):
+                finalScore /= len(scores)
+            paperWithScores.append({'paper':paper,'scores':scores,'finalScore':finalScore})
+        return render_template('finalDecisionPage.html', paperWithScores = paperWithScores)
+    return redirect("/")
+
+@app.route('/submitDecision', methods=['POST'])
+def submitDecision():
+    status = request.form['status']
+    paper_id = request.form['paper_id']
+    paper = db.session.query(models.Paper).filter(models.Paper.id == paper_id).first()
+
+    if status == "accepted":
+        paper.status = models.PaperStatus.ACCEPTED
+    else:
+        if status == "rejected":
+            paper.status = models.PaperStatus.REJECTED
+        else:
+            paper.status = models.PaperStatus.UNDER_REVIEW
+    db.session.commit()
+    return redirect("/paperDecision", code=302)
+
 def isLoggedIn():
     return 'user' in session
 
