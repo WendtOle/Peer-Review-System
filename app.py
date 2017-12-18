@@ -16,13 +16,22 @@ db = SQLAlchemy(app)
 @app.route('/')
 def index():
     if isLoggedIn():
-        papersOfUser = db.session.query(models.Paper).filter(models.Paper.authors.any(id=session['user_id']))
-        currentUser = db.session.query(models.User).get(session['user_id'])
-        papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewers.any(id=session['user_id']))
-        return render_template('index.html', user=currentUser, papers=papersOfUser, papersToReview=papersToReview)
+        if (isAdmin()):
+            return adminDashboard()
+        else:
+            return userDashboard()
     else:
         return render_template('login.html', users=models.User.query.all())
 
+def adminDashboard():
+    papers = db.session.query(models.Paper).all()
+    return render_template('adminDashboard.html', papers=papers)
+
+def userDashboard():
+    papersOfUser = db.session.query(models.Paper).filter(models.Paper.authors.any(id=session['user_id']))
+    currentUser = db.session.query(models.User).get(session['user_id'])
+    papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewers.any(id=session['user_id']))
+    return render_template('userDashboard.html', user=currentUser, papers=papersOfUser, papersToReview=papersToReview)
 
 @app.route('/login', methods=['POST'])
 def login():

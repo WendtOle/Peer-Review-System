@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <br/>
+    <h1>All Papers:</h1>
+
+    <tbody>
+        {% for paper in papers %}
+            <tr>
+                <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
+                <br>
+                <b>authors:</b>
+                <br>
+                {% for user in paper.authors %}
+                    <tr>
+                    <td>{{ user.email }}</td> <br>
+                {% endfor %}
+                <br>
+                <b>Status:</b>
+                <br>
+                <td>{{ paper.status.value }}</td>
+                <br><br>
+            </tr>
+        {% endfor %}
+    </tbody>
+{% endblock %}
