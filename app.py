@@ -162,7 +162,7 @@ def getScoreRowsQuery(paperId, userId):
 
 @app.route('/paperSubmission')
 def paperSubmissionPage():
-    if not isLoggedIn():
+    if not isLoggedIn() or isAdmin():
         return redirect("/")
     allUsers = db.session.query(models.User).filter(models.User.id != session['user_id'])
     return render_template('paperSubmission.html', allUsers=allUsers)
@@ -170,7 +170,7 @@ def paperSubmissionPage():
 
 @app.route('/reviewSubmission')
 def reviewSubmissionPage():
-    if not isLoggedIn():
+    if not isLoggedIn() or isAdmin():
         return redirect("/")
 
     currentUser = db.session.query(models.User).get(session['user_id'])
