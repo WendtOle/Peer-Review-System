@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import models
@@ -40,11 +40,16 @@ def userDashboard():
 def login():
     email = request.form['email']
     password = request.form['password']
-    currentUser = db.session.query(models.User).filter_by(email=email).first_or_404()
-    if bcrypt.check_password_hash(currentUser.password, password):
-        session['user'] = currentUser.email
-        session['isConferenceChair'] = (currentUser.role == models.UserRole.CONFERENCE_CHAIR)
-        session['user_id'] = currentUser.id
+    currentUser = db.session.query(models.User).filter_by(email=email).first()
+    if currentUser is not None:
+        if bcrypt.check_password_hash(currentUser.password, password):
+            session['user'] = currentUser.email
+            session['isConferenceChair'] = (currentUser.role == models.UserRole.CONFERENCE_CHAIR)
+            session['user_id'] = currentUser.id
+        else:
+            flash('Wrong Password!')
+    else:
+        flash('The user does not exist!')
     return redirect("/")
 
 
@@ -86,16 +91,21 @@ def showRegisterPage():
     return render_template('register.html')
 
 
-# TODO: check if email already exists
-# TODO: check if email or password are empty
 @app.route('/register', methods=['POST'])
 def registerUser():
     email = request.form['email']
     password = request.form['password']
-    password_hashed = bcrypt.generate_password_hash(password).decode('utf-8')
-    db.session.add(models.User(email=email, password=password_hashed))
-    db.session.commit()
-    return redirect("/", code=302)
+    if email is '' or password is '':
+        flash('Fields cannot be empty!')
+        return redirect("/register")
+    user = db.session.query(models.User).filter_by(email=email).first()
+    if user is None:
+        password_hashed = bcrypt.generate_password_hash(password).decode('utf-8')
+        db.session.add(models.User(email=email, password=password_hashed))
+        db.session.commit()
+    else:
+        flash('This Email is already registered!')
+    return redirect("/register")
 
 
 @app.route('/paper/', methods=['POST'])

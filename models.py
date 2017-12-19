@@ -17,10 +17,12 @@ class PaperStatus(enum.Enum):
     ACCEPTED = "accepted"
     REJECTED = "rejected"
 
+
 class UserRole(enum.Enum):
     CONFERENCE_CHAIR = "Conference Chair"
     USER = "user"
     REVIEWER = "reviewer"
+
 
 class User(db.Model):
     __tablename__ = 'users'
