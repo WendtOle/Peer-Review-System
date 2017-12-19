@@ -5,26 +5,22 @@
         <h1>Assign Reviewers To Conference:</h1>
         <br>
         <b>Reviewers:</b>
+        <br>
+        {% for reviewer in reviewers %}
+            {{ reviewer.email }}
             <br>
-            <tbody>
-                {% for reviewer in reviewers %}
-                    <tr>
-                        <td>{{ reviewer.email }}</td>
-                    </tr>
-                    <br>
-                {% endfor %}
-            </tbody>
-            <br>
-            <b>Add a Reviewer:</b>
-            <form action="/setUserRole" method="post">
-                <select name="users" multiple>
-                {% for user in users %}
-                    <option value="{{ user.email }}">{{ user.email }}</option>
-                {% endfor %}
-                </select>
-                <br><br>
-                <input type="submit" value="Submit!"/>
-            </form>
+        {% endfor %}
+        <br>
+        <b>Add a Reviewer:</b>
+        <form action="/setUserRole" method="post">
+            <select name="users" multiple>
+            {% for user in users %}
+                <option value="{{ user.email }}">{{ user.email }}</option>
+            {% endfor %}
+            </select>
             <br><br>
+            <input type="submit" value="Submit!"/>
+        </form>
+        <br><br>
     {% endif %}
 {% endblock %}

@@ -2,7 +2,6 @@
 {% block body %}
     <br>
     <h1>Login</h1>
-
     <form action="/login" method="post">
         Email
         <br>
@@ -14,18 +13,12 @@
         <br><br>
         <input type="submit" value="Submit"/>
     </form>
-
     <br>
     <a href="/register">or register as a new user</a>
     <br>
-
     <br>
-    <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.email }}</td>
-            </tr>
-            <br>
-        {% endfor %}
-    </tbody>
+    {% for user in users %}
+        {{ user.email }}
+        <br>
+    {% endfor %}
 {% endblock %}

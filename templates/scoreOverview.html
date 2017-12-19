@@ -1,49 +1,35 @@
 {% extends "layout.html" %}
 {% block body %}
-
     <br/>
     <h1>Paper Score Overview:</h1>
     <br/>
-    <tbody>
-        {% for currentPaper in paperWithScores %}
-            <tr>
-                <h3><a href="/paper/{{ currentPaper.paper.id }}">{{ currentPaper.paper.title }}</a></h3>
-                <b>authors:</b>
-                <br>
-                {% for user in currentPaper.paper.authors %}
-                    <tr>
-                    <td>{{ user.email }}</td> <br>
-                {% endfor %}
-                <br>
-                <b>Status:</b> <td>{{ currentPaper.paper.status.value }}</td>
-                <br>
-            </tr>
-
-            <tbody>
-            {% for score in currentPaper.scores %}
-                <tr>
-                    user_id:
-                    <td>{{ score.userId }}</td>
-                    score:
-                    <td>{{ score.score }}</td>
-                </tr>
-                <br>
-            {% endfor %}
+    {% for currentPaper in paperWithScores %}
+        <h3><a href="/paper/{{ currentPaper.paper.id }}">{{ currentPaper.paper.title }}</a></h3>
+        <b>authors:</b>
+        <br>
+        {% for user in currentPaper.paper.authors %}
+            {{ user.email }}
             <br>
-        </tbody>
-
-        <b>FinalScore:</b> {{ currentPaper.finalScore}}
-
-        <form action="/submitDecision" method="post">
-                    <input type="text" hidden="True" name="paper_id" value="{{ currentPaper.paper.id }}"/>
-                    <input type="radio" name="status" value=underReview> under review </input><br>
-                    <input type="radio" name="status" value=accepted> accepted </input><br>
-                    <input type="radio" name="status" value=rejected> rejected </input><br>
-                    <br>
-                    <input type="submit" value="Submit!"/>
-                    <br><br><br>
-                </form>
-
         {% endfor %}
-    </tbody>
+        <br>
+        <b>Status:</b> <td>{{ currentPaper.paper.status.value }}</td>
+        <br>
+        {% for score in currentPaper.scores %}
+            user_id:
+            {{ score.userId }}
+            score:
+            {{ score.score }}
+            <br>
+        {% endfor %}
+        <br>
+        <b>FinalScore:</b> {{ currentPaper.finalScore}}
+        <form action="/submitDecision" method="post">
+            <input type="text" hidden="True" name="paper_id" value="{{ currentPaper.paper.id }}"/>
+            <input type="radio" name="status" value=underReview> under review </input><br>
+            <input type="radio" name="status" value=accepted> accepted </input><br>
+            <input type="radio" name="status" value=rejected> rejected </input><br><br>
+            <input type="submit" value="Submit!"/>
+            <br><br><br>
+        </form>
+    {% endfor %}
 {% endblock %}

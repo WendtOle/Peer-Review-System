@@ -5,35 +5,25 @@
     <br>
     <b>by:</b>
     <br>
-    <tbody>
-        {% for user in paper.authors %}
-            {{ user.email }}
-            <br>
-        {% endfor %}
-    </tbody>
+    {% for user in paper.authors %}
+        {{ user.email }}
+        <br>
+    {% endfor %}
     <br>
     <b>Abstract:</b>
     <br>
     {{ paper.abstract }}
     <br><br>
-    <b>Status:</b>
-    <br>
-    {{ paper.status.value }}
-    <br>
-    <br>
+    <b>Status:</b> {{ paper.status.value }}
+    <br><br>
     {% if session.isConferenceChair %}
-        <tbody>
-            {% for score in scores %}
-                <tr>
-                    user_id:
-                    <td>{{ score.userId }}</td>
-                    score:
-                    <td>{{ score.score }}</td>
-                </tr>
-                <br>
-            {% endfor %}
-        </tbody>
-
+        {% for score in scores %}
+            user_id:
+            {{ score.userId }}
+            score:
+            {{ score.score }}
+            <br>
+        {% endfor %}
         <b>FinalScore:</b> {{ finalScore}}
     {% endif %}
 {% endblock %}

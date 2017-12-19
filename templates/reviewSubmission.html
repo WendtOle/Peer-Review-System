@@ -2,28 +2,23 @@
 {% block body %}
     <br>
     <h1>Papers to Review:</h1>
-    <tbody>
-        {% for paper in papersToReview %}
-            <tr>
-                <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
-                <b>Score:</b>
-                <br>
-
-                <form action="/submitScore" method="post">
-                    <input type="text" hidden="True" name="paper_id" value="{{ paper.id }}"/>
-                    <input type="text" hidden="True" name="user_id" value="{{ user.id }}"/>
-                    <input type="radio" name="score" value="-2"> - 2 </input><br>
-                    <input type="radio" name="score" value="-1"> - 1 </input><br>
-                    <input type="radio" name="score" value="0" checked="checked" > 0 </input><br>
-                    <input type="radio" name="score" value="1"> + 1 </input><br>
-                    <input type="radio" name="score" value="2"> + 2 </input><br>
-
-                    <br>
-                    <input type="submit" value="Submit!"/>
-                    <br>
-                </form>
-            </tr>
+    <br>
+    {% for paper in papersToReview %}
+        <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
+        <b>Score:</b>
+        <br><br>
+        <form action="/submitScore" method="post">
+            <input type="text" hidden="True" name="paper_id" value="{{ paper.id }}"/>
+            <input type="text" hidden="True" name="user_id" value="{{ user.id }}"/>
+            <input type="radio" name="score" value="-2"> - 2 </input><br>
+            <input type="radio" name="score" value="-1"> - 1 </input><br>
+            <input type="radio" name="score" value="0" checked="checked" > 0 </input><br>
+            <input type="radio" name="score" value="1"> + 1 </input><br>
+            <input type="radio" name="score" value="2"> + 2 </input><br>
             <br>
-        {% endfor %}
-    </tbody>
+            <input type="submit" value="Submit!"/>
+            <br>
+        </form>
+        <br>
+    {% endfor %}
 {% endblock %}

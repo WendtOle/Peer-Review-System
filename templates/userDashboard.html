@@ -1,29 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
-
     <br/>
     <h1>Submitted Papers:</h1>
-
-    <tbody>
-        {% for paper in papers %}
-            <tr>
-                <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
-                <br>
-                <b>Status:</b>
-                <br>
-                <td>{{ paper.status.value }}</td>
-                <br><br>
-            </tr>
-        {% endfor %}
-    </tbody>
-
+    <br/>
+    {% for paper in papers %}
+        <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
+        <b>Status:</b> {{ paper.status.value }}
+        <br><br>
+    {% endfor %}
+    <br/>
     <h1>Papers to Review:</h1>
-    <tbody>
-        {% for paper in papersToReview %}
-            <tr>
-                <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
-            </tr>
-            <br>
-        {% endfor %}
-    </tbody>
+    <br/>
+    {% for paper in papersToReview %}
+        <h3><a href="/paper/{{ paper.id }}">{{ paper.title }}</a></h3>
+        <br>
+    {% endfor %}
 {% endblock %}

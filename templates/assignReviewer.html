@@ -8,15 +8,10 @@
             <h3><a href="/paper/{{ currentPaper.paper.id }}">{{ currentPaper.paper.title }}</a></h3>
             <b>Reviewers:</b>
             <br>
-            <tbody>
-                {% for reviewer in currentPaper.paper.reviewers %}
-                    <tr>
-                        <td>{{ reviewer.email }}</td>
-                    </tr>
-                    <br>
-                {% endfor %}
-            </tbody>
-
+            {% for reviewer in currentPaper.paper.reviewers %}
+                {{ reviewer.email }}
+                <br>
+            {% endfor %}
             {% if currentPaper.amountOfPossibleReviewers <= 0%}
                 <br>
                 You can't add more than <b>3</b> Reviewers to one Paper.
