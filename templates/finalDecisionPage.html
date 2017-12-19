@@ -3,12 +3,11 @@
 
     <br/>
     <h1>All Papers:</h1>
-
+    <br/>
     <tbody>
         {% for currentPaper in paperWithScores %}
             <tr>
                 <h3><a href="/paper/{{ currentPaper.paper.id }}">{{ currentPaper.paper.title }}</a></h3>
-                <br>
                 <b>authors:</b>
                 <br>
                 {% for user in currentPaper.paper.authors %}
@@ -16,10 +15,8 @@
                     <td>{{ user.email }}</td> <br>
                 {% endfor %}
                 <br>
-                <b>Status:</b>
+                <b>Status:</b> <td>{{ currentPaper.paper.status.value }}</td>
                 <br>
-                <td>{{ currentPaper.paper.status.value }}</td>
-                <br><br>
             </tr>
 
             <tbody>
@@ -32,6 +29,7 @@
                 </tr>
                 <br>
             {% endfor %}
+            <br>
         </tbody>
 
         <b>FinalScore:</b> {{ currentPaper.finalScore}}
@@ -43,7 +41,7 @@
                     <input type="radio" name="status" value=rejected> rejected </input><br>
                     <br>
                     <input type="submit" value="Submit!"/>
-                    <br>
+                    <br><br><br>
                 </form>
 
         {% endfor %}

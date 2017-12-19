@@ -39,7 +39,6 @@ def login():
     password = request.form['password']
     currentUser = db.session.query(models.User).filter_by(email=email).first_or_404()
     if bcrypt.check_password_hash(currentUser.password, password):
-        session['logged_in'] = True
         session['user'] = currentUser.email
         session['isConferenceChair'] = currentUser.isConferenceChair
         session['user_id'] = currentUser.id
@@ -48,7 +47,6 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('logged_in')
     session.pop('user')
     session.pop('isConferenceChair')
     session.pop('user_id')

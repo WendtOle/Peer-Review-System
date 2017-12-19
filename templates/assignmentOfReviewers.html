@@ -19,14 +19,11 @@
 
             {% if currentPaper.amountOfPossibleReviewers <= 0%}
                 <br>
-                You can't add more than 3 Reviewers to one Paper.
-                <br><br>
+                You can't add more than <b>3</b> Reviewers to one Paper.
+                <br><br><br>
             {% else %}
-            <br/>
+            <br>
             <b>Add an Reviewer:</b>
-                <br>
-                You only can add {{ currentPaper.amountOfPossibleReviewers }} more reviewerS to this paper.
-                <br><br>
             <form action="/addReviewerToPaper/{{ currentPaper.paper.id }}" method="post">
                 <select name="reviewers" multiple>
                 {% for reviewer in currentPaper.possibleReviewers %}
@@ -34,9 +31,11 @@
                 {% endfor %}
                 </select>
                 <br><br>
+                You only can add <b>{{ currentPaper.amountOfPossibleReviewers }}</b> more reviewerS to this paper.
+                <br><br>
                 <input type="submit" value="Submit!"/>
             </form>
-            <br>
+            <br><br>
             {% endif %}
         {% endfor %}
     {% endif %}
