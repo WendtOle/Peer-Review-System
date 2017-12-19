@@ -23,7 +23,7 @@
                 <br><br><br>
             {% else %}
             <br>
-            <b>Add an Reviewer:</b>
+            <b>Add a Reviewer:</b>
             <form action="/addReviewerToPaper/{{ currentPaper.paper.id }}" method="post">
                 <select name="reviewers" multiple>
                 {% for reviewer in currentPaper.possibleReviewers %}

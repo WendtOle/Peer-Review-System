@@ -17,13 +17,17 @@ class PaperStatus(enum.Enum):
     ACCEPTED = "accepted"
     REJECTED = "rejected"
 
+class UserRole(enum.Enum):
+    CONFERENCE_CHAIR = "Conference Chair"
+    USER = "user"
+    REVIEWER = "reviewer"
 
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-    isConferenceChair = db.Column(db.BOOLEAN)
+    role = db.Column(db.Enum(UserRole), default=UserRole.USER)
     papers = db.relationship("Paper", secondary=user_paper_relation_table)
     papersToReview = db.relationship("Paper", secondary=user_paper_review_relation_table)
 
