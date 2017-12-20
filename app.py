@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 @app.route('/')
 def index():
     if isLoggedIn():
-        if (isAdmin()):
+        if isAdmin():
             return adminDashboard()
         else:
             return userDashboard()
@@ -32,7 +32,7 @@ def adminDashboard():
 def userDashboard():
     papersOfUser = db.session.query(models.Paper).filter(models.Paper.authors.any(id=session['user_id']))
     currentUser = db.session.query(models.User).get(session['user_id'])
-    papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewers.any(id=session['user_id']))
+    papersToReview = getPapersToReviewForUser(currentUser.id)
     return render_template('userDashboard.html', user=currentUser, papers=papersOfUser, papersToReview=papersToReview)
 
 
@@ -66,7 +66,7 @@ def showPaper(paper_id):
     if isLoggedIn():
         currentPaper = db.session.query(models.Paper).get(paper_id)
         if isAdmin():
-            scores = getScoreRowsQuery2(paper_id).all()
+            scores = getScoreRowsQuery(paper_id).all()
             finalScore = 0
             for score in scores:
                 finalScore += score.score
@@ -81,8 +81,7 @@ def showPaper(paper_id):
     return abortBecauseNotLoggedIn()
 
 
-# TODO: Better Name
-def getScoreRowsQuery2(paperId):
+def getScoreRowsQuery(paperId):
     return db.session.query(models.PaperScores).filter(models.PaperScores.paperId == paperId)
 
 
@@ -158,19 +157,9 @@ def submitPaperScore():
     paper_id = request.form['paper_id']
     user_id = request.form['user_id']
 
-    scoreRow = getScoreRowsQuery(paper_id, user_id).first()
-    if (scoreRow != None):
-        scoreRow.score = score
-    else:
-        db.session.add(models.PaperScores(paperId=paper_id, userId=user_id, score=score))
+    db.session.add(models.PaperScores(paperId=paper_id, userId=user_id, score=score))
     db.session.commit()
-    return redirect("/", code=302)
-
-
-def getScoreRowsQuery(paperId, userId):
-    scoreRows = db.session.query(models.PaperScores).filter(
-        models.PaperScores.userId == userId and models.PaperScores.paperId == paperId)
-    return scoreRows
+    return redirect("/reviewSubmission", code=302)
 
 
 @app.route('/paperSubmission')
@@ -185,13 +174,23 @@ def paperSubmissionPage():
     return render_template('paperSubmission.html', allUsers=userThatCouldBeCoAuthors)
 
 
+def getPapersToReviewForUser(userId):
+    papersAssignedToUser = db.session.query(models.Paper).filter(models.Paper.reviewers.any(id=userId))
+    papersToReview = []
+    for paper in papersAssignedToUser:
+        paperScored = db.session.query(models.PaperScores).filter(models.PaperScores.userId == userId).filter(
+            models.PaperScores.paperId == paper.id)
+        if len(paperScored) == 0:
+            papersToReview.append(paper)
+    return papersToReview
+
+
 @app.route('/reviewSubmission')
 def reviewSubmissionPage():
     if not isLoggedIn() or isAdmin():
         return redirect("/")
-
     currentUser = db.session.query(models.User).get(session['user_id'])
-    papersToReview = db.session.query(models.Paper).filter(models.Paper.reviewers.any(id=session['user_id']))
+    papersToReview = getPapersToReviewForUser(currentUser.id)
     return render_template('reviewSubmission.html', user=currentUser, papersToReview=papersToReview)
 
 
@@ -239,7 +238,7 @@ def finalDecision():
         papers = db.session.query(models.Paper).all()
         paperWithScores = []
         for paper in papers:
-            scores = getScoreRowsQuery2(paper.id).all()
+            scores = getScoreRowsQuery(paper.id).all()
             finalScore = 0
             for score in scores:
                 finalScore += score.score
