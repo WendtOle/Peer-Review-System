@@ -102,9 +102,10 @@ def registerUser():
         password_hashed = bcrypt.generate_password_hash(password).decode('utf-8')
         db.session.add(models.User(email=email, password=password_hashed))
         db.session.commit()
+        return redirect("/")
     else:
         flash('This Email is already registered!')
-    return redirect("/register")
+        return redirect("/register")
 
 
 @app.route('/paper/', methods=['POST'])
