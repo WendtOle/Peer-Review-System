@@ -17,6 +17,12 @@
                 You can't add more than <b>3</b> Reviewers to one Paper.
                 <br><br><br>
             {% else %}
+                {% if currentPaper.amountOfAvailableReviewers == 0%}
+                    <br>
+                    There are no more available Reviewers for this conference.<br>
+                    Assign more User to Reviewers of Conference.
+                    <br><br><br>
+                {% else %}
             <br>
             <b>Add a Reviewer:</b>
             <form action="/addReviewerToPaper/{{ currentPaper.paper.id }}" method="post">
@@ -25,12 +31,15 @@
                     <option value="{{ reviewer.email }}">{{ reviewer.email }}</option>
                 {% endfor %}
                 </select>
-                <br><br>
-                You only can add <b>{{ currentPaper.amountOfPossibleReviewers }}</b> more reviewerS to this paper.
-                <br><br>
+                {% if currentPaper.amountOfPossibleReviewers < currentPaper.amountOfAvailableReviewers %}
+                    <br><br>
+                    You only can add <b>{{ currentPaper.amountOfPossibleReviewers }}</b> more reviewerS to this paper.
+                    <br><br>
+                {% endif %}
                 <input type="submit" value="Submit!"/>
             </form>
             <br><br>
+            {% endif %}
             {% endif %}
         {% endfor %}
     {% endif %}

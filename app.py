@@ -208,7 +208,8 @@ def showAssignReviewer():
                     possibleReviewers.append(user)
             amountOfPossibleReviewers = 3 - len(paper.reviewers)
             paperWithPossibleReviewers.append({'paper': paper, 'possibleReviewers': possibleReviewers,
-                                               'amountOfPossibleReviewers': amountOfPossibleReviewers})
+                                               'amountOfPossibleReviewers': amountOfPossibleReviewers,
+                                               'amountOfAvailableReviewers': len(possibleReviewers)})
         return render_template('assignReviewer.html', paperWithPossibleReviewers=paperWithPossibleReviewers)
     return redirect("/")
 
@@ -287,7 +288,6 @@ def abortBecauseNotAuthorOrReviewer():
 
 def abortBecauseNotLoggedIn():
     return redirect("/", code=303)
-
 
 if __name__ == '__main__':
     dbSeed.init()
