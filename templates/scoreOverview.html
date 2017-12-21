@@ -12,17 +12,14 @@
             <br>
         {% endfor %}
         <br>
-        <b>Status:</b> <td>{{ currentPaper.paper.status.value }}</td>
-        <br>
+        <b>Submitted Ratings: </b>
         {% for score in currentPaper.scores %}
-            user_id:
-            {{ score.userId }}
-            score:
             {{ score.score }}
-            <br>
         {% endfor %}
         <br>
-        <b>FinalScore:</b> {{ currentPaper.finalScore}}
+        <b>Final Score:</b> {{ currentPaper.finalScore}}
+        <br>
+        <b>Current Status:</b> <td>{{ currentPaper.paper.status.value }}</td>
         <form action="/submitDecision" method="post">
             <input type="text" hidden="True" name="paper_id" value="{{ currentPaper.paper.id }}"/>
             <input type="radio" name="status" value=underReview> under review </input><br>
